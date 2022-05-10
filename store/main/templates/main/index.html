@@ -1,0 +1,71 @@
+{% extends "main/base.html" %}
+
+{% block title %}
+Main page
+{% endblock %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="grid-container" style="display: grid; padding: 40px 20px;">
+    {% for product in products %}
+    <div class="grid-item mt-2"
+         style="background-color: #f7f7f7; padding: 20px 10px; border-radius: 20px; margin-bottom: 20px">
+        <div class="col-xs-12 col-sm-5 col-md-5 col-lg-4">
+            <div class="post">
+                <a href="#"><img src="{{ product.product_photo.url }}" class="img-thumbnail"
+                                 alt="image post" style="border-radius: 10px;"></a>
+            </div>
+            <div class="author-info author-info-2" style="text-align: center; margin-top: 20px">
+                <ul class="list-inline">
+                    <li><p class="card-text"><strong>Cost: ${{product.product_price}}</strong></p></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-7 col-md-7 col-lg-8">
+            <div class="caption" style="text-align: center">
+                <h1 style="text-align: center">{{product.product_name}}</h1>
+                <p>{{product.product_description}}</p>
+                <div style="display: flex; text-align: left">
+                    <ul  class="description">
+                        <li>
+                            <p4>Категория: </p4>
+                        </li>
+                        <li>
+                            <p4>Тип: </p4>
+                        </li>
+                        <li>
+                            <p4>Пол: </p4>
+                        </li>
+                        <li>
+                            <p4>Цвет: </p4>
+                        </li>
+                    </ul>
+                    <ul  class="description">
+                        <li>
+                            <p3>{{product.product_category}}</p3>
+                        </li>
+                        <li>
+                            <p3>{{product.product_type}}</p3>
+                        </li>
+                        <li>
+                            <p3>{{product.product_gender}}</p3>
+                        </li>
+                        <li>
+                            <p3>{{product.product_color}}</p3>
+                        </li>
+                    </ul>
+                </div>
+
+                <a href="#" class="btn btn-primary">Add to cart</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+
