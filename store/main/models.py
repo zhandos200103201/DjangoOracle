@@ -64,7 +64,7 @@ class Category(models.Model):
 
 class Products(models.Model):
     product_name = models.CharField(max_length=50, null=True)
-    slug = models.SlugField(null=False, unique=True)
+    slug = models.SlugField(null=False, unique=False)
     product_photo = models.ImageField(null=True, blank=True, upload_to='photos/%Y/%m/%d/')
     product_description = models.CharField(max_length=1024, null=True)
     product_size = models.CharField(max_length=50)
