@@ -5,19 +5,18 @@ Main page
 {% endblock %}
 {% load static %}
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/index.css' %}">
 {% endblock %}
 
 {% block content %}
 {% load static %}
-<div class="grid-container" style="display: grid; padding: 40px 20px;">
+<div class="grid-container" style="display: grid; padding: 40px 20px; margin-top: 40px;">
     {% for product in products %}
-    <div class="grid-item mt-2"
-         style="background-color: #f7f7f7; padding: 20px 10px; border-radius: 20px; margin-bottom: 20px">
+    <div class="grid-item mt-2" style="background-color: #f7f7f7; padding: 20px 10px; border-radius: 20px; margin-bottom: 20px;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;">
         <div class="col-xs-12 col-sm-5 col-md-5 col-lg-4">
             <div class="post">
-                <a href="#"><img src="{{ product.product_photo.url }}" class="img-thumbnail"
-                                 alt="image post" style="border-radius: 10px;"></a>
+                <a href="{{ product.get_absolute_url }}"><img src="{{ product.product_photo.url }}" class="img-thumbnail"
+                                 alt="image post" style="border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;"></a>
             </div>
             <div class="author-info author-info-2" style="text-align: center; margin-top: 20px">
                 <ul class="list-inline">
@@ -60,12 +59,14 @@ Main page
                     </ul>
                 </div>
 
-                <a href="#" class="btn btn-primary">Add to cart</a>
+                <a data-product="{{product.pk}}" data-action="add" class="btn btn-primary update-cart">Add to cart</a>
             </div>
         </div>
     </div>
     {% endfor %}
 </div>
 {% endblock %}
-
+{% block js %}
+<script src="{% static 'js/cart.js' %}"></script>
+{% endblock %}
 

@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 
@@ -68,7 +69,7 @@ class Products(models.Model):
     product_photo = models.ImageField(null=True, blank=True, upload_to='photos/%Y/%m/%d/')
     product_description = models.CharField(max_length=1024, null=True)
     product_size = models.CharField(max_length=50)
-    product_price = models.CharField(max_length=50, null=True)
+    product_price = models.IntegerField(max_length=50, null=True)
     product_available = models.DecimalField(max_digits=10, decimal_places=3)
     product_type = models.ForeignKey(Types, related_name="products", on_delete=models.CASCADE, null=True)
     product_color = models.ForeignKey(Colors, related_name="products", on_delete=models.CASCADE, null=True)
@@ -81,7 +82,60 @@ class Products(models.Model):
         verbose_name_plural = 'Продукты'
 
     def get_absolute_url(self):
-        return reverse("product_detail", kwargs={"slug": self.pk})
+        return reverse('view', kwargs={'product_id': self.pk})
+
+    def get_absolute_url2(self):
+        return reverse('delete_item', kwargs={'product_id': self.pk})
 
     def __str__(self):
         return self.product_name
+
+
+class Order(models.Model):
+    customer = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    date_ordered = models.DateTimeField(auto_now_add=True)
+    complete = models.BooleanField(default=False, null=True, blank=False)
+
+    def __str__(self):
+        return str(self.pk)
+
+    @property
+    def get_cart_total(self):
+        orderitem = self.orderitem_set.all()
+        total = sum([item.get_total for item in orderitem])
+        return total
+
+    @property
+    def get_cart_items(self):
+        orderitem = self.orderitem_set.all()
+        total = sum([item.quantity for item in orderitem])
+        return total
+
+
+class OrderItem(models.Model):
+    product = models.ForeignKey(Products, on_delete=models.SET_NULL, blank=True, null=True)
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True)
+    quantity = models.IntegerField(default=0, null=True, blank=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def get_total(self):
+        total = self.quantity * self.product.product_price
+        return total
+
+    def __str__(self):
+        return self.product.product_name
+
+
+class ShippingAddress(models.Model):
+    product = models.ForeignKey(Products, on_delete=models.SET_NULL, blank=True, null=True)
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True)
+    address = models.CharField(max_length=50, null=True)
+    city = models.CharField(max_length=50, null=True)
+    state = models.CharField(max_length=50, null=True)
+    zip_code = models.CharField(max_length=50, null=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.address
+

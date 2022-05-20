@@ -1,32 +1,88 @@
 from django.conf import settings
 from django.core.mail import send_mail
-
+from django.http import JsonResponse
 from .forms import LoginUserForm, RegisterUserForm
 from django.contrib.auth import logout, login
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+import json
 from django.views.generic import CreateView
-from .models import Products, Category, Gender, Colors, Types
-
-menu = [
-    {'title': "Категории", },
-    {'title': "Типы", },
-    {'title': "Цвета", },
-    {'title': "Пол", }
-]
+from .models import Products, Category, Gender, Colors, Types, Order, OrderItem, ShippingAddress
 
 
-def searchProduct(request):
-    return render(request, 'main/index.html', {})
+def deleteItem(request, productId):
+    customer = request.user
+    product = Products.objects.get(pk=productId)
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
+    orderItem.delete()
 
 
-def index(request):
-    products = Products.objects.all()
+def updateItem(request):
+    data = json.loads(request.body)
+    productId = data['productId']
+    action = data['action']
+
+    customer = request.user
+    product = Products.objects.get(pk=productId)
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
+
+    if action == 'add':
+        orderItem.quantity = (orderItem.quantity + 1)
+    elif action == 'remove':
+        orderItem.quantity = (orderItem.quantity - 1)
+    else:
+        orderItem.quantity = 0
+
+    orderItem.save()
+
+    if orderItem.quantity <= 0:
+        orderItem.delete()
+
+    return JsonResponse('Item was added', safe=False)
+
+
+def checkout(request):
+    context = {}
+    return render(request, 'main/checkout.html', context)
+
+
+def cart(request):
+    if request.user.is_authenticated:
+        customer = request.user
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+    else:
+        items = []
+        order = {
+            'get_cart_total': 0,
+            'get_cart_item': 0,
+        }
+    context = {
+        'items': items,
+        'order': order,
+    }
+    return render(request, 'main/cart.html', context)
+
+
+def view(request, product_id):
+    products = Products.objects.filter(pk=product_id)
+
+    context = {
+        'products': products,
+    }
+    return render(request, 'main/index.html', context=context)
+
+
+def search(request):
+    searched = request.GET.get('search')
     cats = Category.objects.all()
     types = Types.objects.all()
     genders = Gender.objects.all()
     colors = Colors.objects.all()
+    products = Products.objects.all().filter(product_description__contains=searched)
 
     context = {
         'products': products,
@@ -38,6 +94,43 @@ def index(request):
         'gender_selected': 0,
         'color_selected': 0,
         'type_selected': 0,
+    }
+    return render(request, 'main/index.html', context=context)
+
+
+def index(request):
+    products = Products.objects.all()
+    cats = Category.objects.all()
+    types = Types.objects.all()
+    genders = Gender.objects.all()
+    colors = Colors.objects.all()
+
+    if request.user.is_authenticated:
+        customer = request.user
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+        cartItems = order.get_cart_items
+    else:
+        items = []
+        order = {
+            'get_cart_total': 0,
+            'get_cart_item': 0,
+        }
+        cartItems = order['get_cart_items']
+
+    context = {
+        'products': products,
+        'cats': cats,
+        'types': types,
+        'genders': genders,
+        'colors': colors,
+        'cat_selected': 0,
+        'gender_selected': 0,
+        'color_selected': 0,
+        'type_selected': 0,
+        'items': items,
+        'order': order,
+        'cartItems': cartItems
     }
 
     return render(request, 'main/index.html', context=context)
