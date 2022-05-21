@@ -1,88 +1,103 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap');
+body {
+  font-family: Arial;
+  font-size: 17px;
+  padding: 8px;
+}
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
+  box-sizing: border-box;
 }
 
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #0C4160;
-    padding: 30px 10px;
+.row {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  margin: 0 -16px;
 }
 
-.card {
-    max-width: 500px;
-    margin: auto;
-    color: black;
-    border-radius: 20px;
+.col-25 {
+  -ms-flex: 25%; /* IE10 */
+  flex: 25%;
 }
 
-p {
-    margin: 0px;
+.col-50 {
+  -ms-flex: 50%; /* IE10 */
+  flex: 50%;
 }
 
-.container .h8 {
-    font-size: 30px;
-    font-weight: 800;
-    text-align: center;
+.col-75 {
+  -ms-flex: 75%; /* IE10 */
+  flex: 75%;
 }
 
-.btn.btn-primary {
-    width: 100%;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 15px;
-    background-image: linear-gradient(to right, #77A1D3 0%, #79CBCA 51%, #77A1D3 100%);
-    border: none;
-    transition: 0.5s;
-    background-size: 200% auto;
-
+.col-25,
+.col-50,
+.col-75 {
+  padding: 0 16px;
 }
 
-
-.btn.btn.btn-primary:hover {
-    background-position: right center;
-    color: #fff;
-    text-decoration: none;
+.container {
+  background-color: #f2f2f2;
+  padding: 5px 20px 15px 20px;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
 }
 
-
-
-.btn.btn-primary:hover .fas.fa-arrow-right {
-    transform: translate(15px);
-    transition: transform 0.2s ease-in;
+input[type=text] {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
 }
 
-.form-control {
-    color: white;
-    background-color: #223C60;
-    border: 2px solid transparent;
-    height: 60px;
-    padding-left: 20px;
-    vertical-align: middle;
+label {
+  margin-bottom: 10px;
+  display: block;
 }
 
-.form-control:focus {
-    color: white;
-    background-color: #0C4160;
-    border: 2px solid #2d4dda;
-    box-shadow: none;
+.icon-container {
+  margin-bottom: 20px;
+  padding: 7px 0;
+  font-size: 24px;
 }
 
-.text {
-    font-size: 14px;
-    font-weight: 600;
+.btn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
 }
 
-::placeholder {
-    font-size: 14px;
-    font-weight: 600;
+.btn:hover {
+  background-color: #45a049;
+}
+
+a {
+  color: #2196F3;
+}
+
+hr {
+  border: 1px solid lightgrey;
+}
+
+span.price {
+  float: right;
+  color: grey;
+}
+
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
+@media (max-width: 800px) {
+  .row {
+    flex-direction: column-reverse;
+  }
+  .col-25 {
+    margin-bottom: 20px;
+  }
 }

@@ -45,7 +45,20 @@ def updateItem(request):
 
 
 def checkout(request):
-    context = {}
+    if request.user.is_authenticated:
+        customer = request.user
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+    else:
+        items = []
+        order = {
+            'get_cart_total': 0,
+            'get_cart_item': 0,
+        }
+    context = {
+        'items': items,
+        'order': order,
+    }
     return render(request, 'main/checkout.html', context)
 
 
@@ -116,7 +129,7 @@ def index(request):
             'get_cart_total': 0,
             'get_cart_item': 0,
         }
-        cartItems = order['get_cart_items']
+        cartItems = 0
 
     context = {
         'products': products,
