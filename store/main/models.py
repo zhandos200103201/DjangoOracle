@@ -91,6 +91,10 @@ class Products(models.Model):
     def __str__(self):
         return self.product_name
 
+    class Meta:
+        verbose_name = 'Продукт'
+        verbose_name_plural = 'Продукты'
+
 
 class Order(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
@@ -122,6 +126,10 @@ class Order(models.Model):
         total = sum([item.quantity for item in orderitem])
         return total
 
+    class Meta:
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
+
 
 class OrderItem(models.Model):
     product = models.ForeignKey(Products, on_delete=models.SET_NULL, blank=True, null=True)
@@ -137,6 +145,10 @@ class OrderItem(models.Model):
     def __str__(self):
         return self.product.product_name
 
+    class Meta:
+        verbose_name = 'Элемент заказа'
+        verbose_name_plural = 'Элементы заказа'
+
 
 class ShippingAddress(models.Model):
     customer = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
@@ -150,3 +162,7 @@ class ShippingAddress(models.Model):
 
     def __str__(self):
         return self.address
+
+    class Meta:
+        verbose_name = 'Адрес достаки'
+        verbose_name_plural = 'Адреса доставки'
