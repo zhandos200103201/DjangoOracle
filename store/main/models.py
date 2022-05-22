@@ -69,12 +69,13 @@ class Products(models.Model):
     product_photo = models.ImageField(null=True, blank=True, upload_to='photos/%Y/%m/%d/')
     product_description = models.CharField(max_length=1024, null=True)
     product_size = models.CharField(max_length=50)
-    product_price = models.IntegerField(max_length=50, null=True)
+    product_price = models.IntegerField(null=True)
     product_available = models.DecimalField(max_digits=10, decimal_places=3)
     product_type = models.ForeignKey(Types, related_name="products", on_delete=models.CASCADE, null=True)
     product_color = models.ForeignKey(Colors, related_name="products", on_delete=models.CASCADE, null=True)
     product_gender = models.ForeignKey(Gender, related_name="products", on_delete=models.CASCADE, null=True)
     product_category = models.ForeignKey(Category, related_name="products", on_delete=models.CASCADE, null=True)
+    digital = models.BooleanField(default=False, null=True, blank=False)
 
     class Meta:
         ordering = ('product_name',)
@@ -95,9 +96,19 @@ class Order(models.Model):
     customer = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     date_ordered = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False, null=True, blank=False)
+    transaction_id = models.CharField(max_length=200, null=True)
 
     def __str__(self):
         return str(self.pk)
+
+    @property
+    def shipping(self):
+        shippiing = False
+        orderitem = self.orderitem_set.all()
+        for i in orderitem:
+            if i.product.digital == False:
+                shippiing = True
+        return shippiing
 
     @property
     def get_cart_total(self):
@@ -128,14 +139,14 @@ class OrderItem(models.Model):
 
 
 class ShippingAddress(models.Model):
-    product = models.ForeignKey(Products, on_delete=models.SET_NULL, blank=True, null=True)
+    customer = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True)
     address = models.CharField(max_length=50, null=True)
     city = models.CharField(max_length=50, null=True)
+    country = models.CharField(max_length=50, null=True)
     state = models.CharField(max_length=50, null=True)
     zip_code = models.CharField(max_length=50, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.address
-

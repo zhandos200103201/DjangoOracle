@@ -13,7 +13,7 @@ Log in
 {% block content %}
 {% load crispy_forms_tags %}
  <div class="signup-form">
-    <form method="post" style="text-align: center">{% csrf_token %}
+    <form method="post" style="text-align: center; margin-top: 10%;">{% csrf_token %}
 		<h2>Sign Up</h2>
 		{{ form|crispy }}
 		<p>Please fill in this form to create an account!</p>

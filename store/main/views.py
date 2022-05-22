@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from .forms import LoginUserForm, RegisterUserForm
@@ -7,8 +8,37 @@ from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 import json
+import datetime
 from django.views.generic import CreateView
 from .models import Products, Category, Gender, Colors, Types, Order, OrderItem, ShippingAddress
+
+
+def processOrder(request):
+    transaction_id = datetime.datetime.now().timestamp()
+    data = json.loads(request.body)
+    if request.user.is_authenticated:
+        customer = request.user
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        total = data['form']['total']
+        order.transaction_id = transaction_id
+
+        if total == order.get_cart_total:
+            order.complete = True
+        order.save()
+
+        if order.shipping == True:
+            ShippingAddress.objects.create(
+                customer=customer,
+                order=order,
+                address=data['shipping']['address'],
+                city=data['shipping']['city'],
+                country=data['shipping']['country'],
+                state=data['shipping']['state'],
+                zipcode=data['shipping']['zipcode'],
+            )
+    else:
+        print('User not logged in... ')
+    return JsonResponse('Payment complete successfully!', safe=False)
 
 
 def deleteItem(request, productId):
@@ -40,7 +70,6 @@ def updateItem(request):
 
     if orderItem.quantity <= 0:
         orderItem.delete()
-
     return JsonResponse('Item was added', safe=False)
 
 
@@ -54,6 +83,7 @@ def checkout(request):
         order = {
             'get_cart_total': 0,
             'get_cart_item': 0,
+            'shipping': False,
         }
     context = {
         'items': items,
@@ -72,6 +102,7 @@ def cart(request):
         order = {
             'get_cart_total': 0,
             'get_cart_item': 0,
+            'shipping': False,
         }
     context = {
         'items': items,
@@ -117,6 +148,7 @@ def index(request):
     types = Types.objects.all()
     genders = Gender.objects.all()
     colors = Colors.objects.all()
+    staff = User.objects.filter(is_staff=False)
 
     if request.user.is_authenticated:
         customer = request.user
@@ -128,6 +160,7 @@ def index(request):
         order = {
             'get_cart_total': 0,
             'get_cart_item': 0,
+            'shipping': False,
         }
         cartItems = 0
 
@@ -143,7 +176,8 @@ def index(request):
         'type_selected': 0,
         'items': items,
         'order': order,
-        'cartItems': cartItems
+        'cartItems': cartItems,
+        'staff': staff,
     }
 
     return render(request, 'main/index.html', context=context)
@@ -277,3 +311,25 @@ def logout_user(request):
 
 def admin(request):
     return None
+
+
+def userProfile(request):
+    if request.user.is_authenticated:
+        customer = request.user
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+    else:
+        items = []
+        order = {
+            'get_cart_total': 0,
+            'get_cart_item': 0,
+            'shipping': False,
+        }
+    context = {
+        'items': items,
+        'order': order,
+        'user': request.user,
+        'fullname': request.user.get_full_name()
+    }
+
+    return render(request, 'main/userProfile.html', context)
