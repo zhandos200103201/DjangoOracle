@@ -16,3 +16,6 @@ admin.site.register(Gender)
 admin.site.register(Order)
 admin.site.register(OrderItem)
 admin.site.register(ShippingAddress)
+
+
+admin.site.site_header='Qazaq Republic'
