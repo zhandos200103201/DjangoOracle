@@ -1,10 +1,130 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}
+Create new cloth
+{% endblock %}
 
-</body>
-</html>
+
+{% block content %}
+{% load crispy_forms_tags %}
+<h1>Add a new cloth</h1>
+
+
+<!--<form method="post"  enctype="multipart/form-data">-->
+<!--     {% csrf_token %}-->
+<!--  <div class="mb-3">-->
+<!--    <label for="exampleInputEmail1" class="form-label">Product Name </label>-->
+<!--    <input type="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">-->
+
+<!--  </div>-->
+
+<!-- <div class="mb-3">-->
+<!--  <label for="formFileMultiple" class="form-label">Product photo</label>-->
+<!--  <input class="form-control" type="file" id="formFileMultiple" multiple>-->
+<!--</div>-->
+
+<!--     <div class="mb-3">-->
+<!--    <label for="" class="form-label">Product description</label>-->
+<!--    <input type="text" class="form-control" id="">-->
+<!--  </div>-->
+
+
+<!--     <div class="mb-3">-->
+<!--    <label for="" class="form-label">Product size</label>-->
+<!--    <input type="text" class="form-control" id="">-->
+<!--  </div>-->
+<!--    -->
+<!--    -->
+<!--    -->
+<!--     <div class="mb-3">-->
+<!--    <label for="" class="form-label">Product price</label>-->
+<!--    <input type="number" class="form-control" id="">-->
+<!--  </div>-->
+<!--    -->
+<!--    -->
+<!--    -->
+<!--     <div class="mb-3">-->
+<!--    <label for="" class="form-label">Product avialable</label>-->
+<!--    <input type="text" class="form-control" id="">-->
+<!--  </div>-->
+
+
+<!--  <button type="submit" class="btn btn-primary">Add</button>-->
+<!--</form>-->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-12">
+        {{form.product_name.error}}
+        {{form.product_name.label_tag}}
+        {{form.product_name}}
+    </div>
+    <br>
+    <div class="mb-12">
+        {{form.slug.error}}
+        {{form.slug.label_tag}}
+        {{form.slug}}
+    </div>
+    <br>
+   <div class="mb-12">
+        {{form.product_photo.error}}
+        {{form.product_photo.label_tag}}
+        {{form.product_photo}}
+    </div>
+    <br>
+    <div class="mb-12">
+        {{form.product_description.error}}
+        {{form.product_description.label_tag}}
+        {{form.product_description}}
+    </div>
+    <br>
+    <div class="mb-12">
+        {{form.product_size.error}}
+        {{form.product_size.label_tag}}
+        {{form.product_size}}
+    </div>
+     <br>
+   <div class="mb-12">
+        {{form.product_price.error}}
+        {{form.product_price.label_tag}}
+        {{form.product_price}}
+    </div>
+     <br>
+   <div class="mb-12">
+        {{form.product_available.error}}
+        {{form.product_available.label_tag}}
+        {{form.product_available}}
+    </div>
+    <br>
+    <div class="mb-12">
+        {{form.product_type.error}}
+        {{form.product_type.label_tag}}
+        {{form.product_type}}
+    </div>
+    <br>
+    <div class="mb-12">
+        {{form.product_color.error}}
+        {{form.product_color.label_tag}}
+        {{form.product_color}}
+    </div>
+    <br>
+    <div class="mb-12">
+        {{form.product_gender.error}}
+        {{form.product_gender.label_tag}}
+        {{form.product_gender}}
+    </div>
+     <br>
+   <div class="mb-12">
+        {{form.product_category.error}}
+        {{form.product_category.label_tag}}
+        {{form.product_category}}
+    </div>
+     <br>
+   <div class="mb-12">
+        {{form.digital.error}}
+        {{form.digital.label_tag}}
+        {{form.digital}}
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>
+{% endblock %}

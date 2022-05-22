@@ -12,6 +12,8 @@ import datetime
 from django.views.generic import CreateView
 from .models import Products, Category, Gender, Colors, Types, Order, OrderItem, ShippingAddress
 
+from .forms import *
+
 
 def processOrder(request):
     transaction_id = datetime.datetime.now().timestamp()
@@ -333,3 +335,17 @@ def userProfile(request):
     }
 
     return render(request, 'main/userProfile.html', context)
+
+
+def add(request):
+    form = AddProduct(request.POST, request.FILES)
+    error = ''
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+        else:
+            error = 'Форма была неправильной'
+
+    form = AddProduct(request.POST)
+    return render(request, 'main/add.html', {"form": form, "error": error})

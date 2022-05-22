@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 from .views import LoginUser, RegisterUser, logout_user, index, admin, show_category, show_gender, show_type, \
-    show_color, search, view, cart, checkout, updateItem, deleteItem, processOrder, userProfile
+    show_color, search, view, cart, checkout, updateItem, deleteItem, processOrder, userProfile,add
 
 urlpatterns = [
                   path('', index, name='home'),
@@ -17,6 +17,7 @@ urlpatterns = [
                   path('search/', search, name='search'),
                   path('cart/', cart, name='cart'),
                   path('user/', userProfile, name='user'),
+                  path('add/', add, name='add'),
                   path('checkout/', checkout, name='checkout'),
                   path('view/<int:product_id>/', view, name='view'),
                   path('update_item/', updateItem, name='update_item'),
