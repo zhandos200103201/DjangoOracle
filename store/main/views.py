@@ -284,6 +284,7 @@ class RegisterUser(CreateView):
 
     def form_valid(self, form):
         user = form.save()
+        print(self.request.POST.get('username'))
         login(self.request, user)
         if form.is_valid():
             cd = form.cleaned_data

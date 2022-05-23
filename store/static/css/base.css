@@ -12,7 +12,7 @@ ul.dropdown-cart li .item {
 }
 
 ul.dropdown-cart li .item:hover {
-    background-color: #f3f3f3;
+    background-color: #c4c4c4;
 }
 
 ul.dropdown-cart li .item:after {
@@ -47,4 +47,10 @@ ul.dropdown-cart li .item-right {
 
 ul.dropdown-cart li .item-right button {
     margin-top: 14px;
+}
+
+@media only screen and (min-width: 768px) {
+  body {
+    background-color: #c4c4c4;
+  }
 }
